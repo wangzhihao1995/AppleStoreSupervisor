@@ -3,6 +3,12 @@ import json
 import time
 import random
 import webbrowser
+from enum import Enum
+
+class ResponseStatus(Enum):
+    TARGET_AVAILABLE = 1
+    TARGET_NOT_AVAILABLE = 2
+    STORE_NOT_OPEN = 3
 
 def check_status():
     url = 'https://reserve.cdn-apple.com/CN/zh_CN/reserve/iPhone/availability.json'
@@ -19,8 +25,9 @@ def check_status():
     if not availability:
         print '--------------------------------------'
         print '|  Apple Store is not available now  |'
-        print '|      Please try again later        |'
+        print '|    Automatically refersh later     |'
         print '--------------------------------------'
+        return dict(status=ResponseStatus.STORE_NOT_OPEN)
     else:
         beijing_stores = {'R320':'sanlitun', 'R645':'chaoyang', 'R448':'wangfujing', 'R388':'xidan', 'R479':'huamao'}
 
@@ -69,16 +76,22 @@ def check_status():
         if xd == 'ALL':
             available_stores.append('xidan')
             urls.append(order_url.format(store_num='R388'))
-        return available_stores, urls
 
+        if len(available_stores) > 0:
+            return dict(status=ResponseStatus.TARGET_AVAILABLE,
+                        stores=available_stores, urls=urls)
+        else:
+            return dict(status=ResponseStatus.TARGET_NOT_AVAILABLE)
 flag = True
 while flag:
-    available_stores, urls = check_status()
-    if len(available_stores) > 0:
+    response = check_status()
+    if response.get('status')==ResponseStatus.TARGET_AVAILABLE:
+        available_stores = response.get('available_stores')
+        urls = response.get('urls')
         flag = 0
-        stores = str(available_stores).replace('\'','').replace('[','').replace(']','')
+        stores = ', '.join(available_stores)
         print '* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *'
-        print '     iPhone7+ is available in {stores} now!'.format(stores=stores)
+        print '    iPhone 7 Plus is available in {stores} now!'.format(stores=stores)
         print '         Directing to the apple.com.cn...'
         print '             Thanks for using!'
         print '* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *'
