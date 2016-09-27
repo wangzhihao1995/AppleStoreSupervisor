@@ -16,6 +16,8 @@ Temporarily, this script only support supervising the availability of iPhone 7 P
 Don't worry, more powerful functions will be implemented before long.
 
 ## Updates
+- 2016.09.27
+    + Would not crash if the network is down
 - 2016.09.26
     + Show message if Apple Store is not available
     + Automatically refresh the availability with random interval
