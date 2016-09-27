@@ -84,7 +84,11 @@ def check_status():
             return dict(status=ResponseStatus.TARGET_NOT_AVAILABLE)
 flag = True
 while flag:
-    response = check_status()
+    response = dict(status=None)
+    try:
+        response = check_status()
+    except:
+        pass
     if response.get('status')==ResponseStatus.TARGET_AVAILABLE:
         available_stores = response.get('available_stores')
         urls = response.get('urls')
