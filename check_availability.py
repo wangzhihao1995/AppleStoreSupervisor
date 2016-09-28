@@ -26,6 +26,7 @@ def check_status():
         print '--------------------------------------'
         print '|  Apple Store is not available now  |'
         print '|    Automatically refersh later     |'
+        print '|     Last Updated: {now_time} |'.format(now_time=now_time)
         print '--------------------------------------'
         return dict(status=ResponseStatus.STORE_NOT_OPEN)
     else:
@@ -102,6 +103,6 @@ while flag:
         for url in urls:
             webbrowser.open(url)
         flag = False
-    sleep_time = random.randint(5, 10)
+    sleep_time = random.randint(2, 6)
     time.sleep(sleep_time)
 
