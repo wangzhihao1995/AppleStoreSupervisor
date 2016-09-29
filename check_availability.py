@@ -1,3 +1,5 @@
+# coding: utf-8
+
 import urllib2
 import json
 import time
@@ -30,53 +32,30 @@ def check_status():
         print '--------------------------------------'
         return dict(status=ResponseStatus.STORE_NOT_OPEN)
     else:
-        beijing_stores = {'R320':'sanlitun', 'R645':'chaoyang', 'R448':'wangfujing', 'R388':'xidan', 'R479':'huamao'}
+        beijing_stores = {'R320':'三里屯', 'R645':'朝阳大悦城', 'R448':'王府井', 'R388':'西单大悦城', 'R479':'华贸'}
 
         beijing_availability = dict()
 
         for k, v in beijing_stores.items():
-            beijing_availability[v] = availability[k]
-
-        for k, v in beijing_availability.items():
-            for key in v.keys():
-                if key != target:
-                    v.pop(key)
-
-        slt = beijing_availability.get('sanlitun').get(target)
-        hm = beijing_availability.get('huamao').get(target)
-        cy = beijing_availability.get('chaoyang').get(target)
-        wfy = beijing_availability.get('wangfujing').get(target)
-        xd = beijing_availability.get('xidan').get(target)
+            beijing_availability[k] = availability[k].get(target)
 
         print '------------------------------------'
-        print ' BEIJING IPHONE7+ BLACK AVAILABILITY'
+        print ' Beijing iPhone 7 Plus Availability'
         print '  Last Updated Time: {now_time}'.format(now_time=now_time)
         print '------------------------------------'
-        print '   SANLITUN:     {status}'.format(status=slt)
-        print '   HUAMAO:       {status}'.format(status=hm)
-        print '   CHAOYANG:     {status}'.format(status=cy)
-        print '   WANGFUJING:   {status}'.format(status=wfy)
-        print '   XIDAN:        {status}'.format(status=xd)
+        for k, v in beijing_availability.items():
+            print '   {store_name}: \t\t{status}'.format(store_name=beijing_stores.get(k), status=v)
         print '------------------------------------'
 
         available_stores = []
         urls = []
         order_url = 'https://reserve.cdn-apple.com/CN/zh_CN/reserve/iPhone/availability?channel=&returnURL=&store={store_num}&partNumber=MNFP2CH%2FA'
-        if slt == 'ALL':
-            available_stores.append('sanlitun')
-            urls.append(order_url.format(store_num='R320'))
-        if hm == 'ALL':
-            available_stores.append('huamao')
-            urls.append(order_url.format(store_num='R479'))
-        if cy == 'ALL':
-            available_stores.append('chaoyang')
-            urls.append(order_url.format(store_num='R645'))
-        if wfy == 'ALL':
-            available_stores.append('wangfujing')
-            urls.append(order_url.format(store_num='R448'))
-        if xd == 'ALL':
-            available_stores.append('xidan')
-            urls.append(order_url.format(store_num='R388'))
+
+
+        for k, v in beijing_availability.items():
+            if 'ALL' == v:
+                available_stores.append(beijing_stores.get(k))
+                urls.append(order_url.format(store_num=k))
 
         if len(available_stores) > 0:
             return dict(status=ResponseStatus.TARGET_AVAILABLE,
@@ -89,21 +68,23 @@ while flag:
     try:
         response = check_status()
     except:
-        print 'Exception'
+        print ' {time} Ooops! Exception! Refresh later...'.format(time=time.strftime("%H:%M:%S"))
         pass
     if response.get('status')==ResponseStatus.TARGET_AVAILABLE:
         available_stores = response.get('stores')
         urls = response.get('urls')
         flag = 0
         stores = ', '.join(available_stores)
-        print '* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *'
-        # print '    iPhone 7 Plus is available in {stores} now!'.format(stores=stores)
+        target_name = 'iPhone 7 Plus'
+        print '* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *'
+        print '    {target_name} is available in the following Apple Stores:'.format(target_name=target_name)
+        print '             {stores}'.format(stores=stores)
         print '         Directing to the apple.com.cn...'
-        print '             Thanks for using!'
-        print '* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *'
+        print '                 Thanks for using!'
+        print '* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *'
         for url in urls:
             webbrowser.open(url)
         flag = False
-    sleep_time = random.randint(1, 3)
+    sleep_time = random.randint(1,3)
     time.sleep(sleep_time)
 
