@@ -16,6 +16,8 @@ Temporarily, this script only support supervising the availability of iPhone 7 P
 Don't worry, more powerful functions will be implemented before long.
 
 ## Updates
+- 2016.09.29
+    Fix crash bug
 - 2016.09.28
     + Show update time when Apple Store is not available
 - 2016.09.27
