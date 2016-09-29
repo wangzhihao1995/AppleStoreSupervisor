@@ -12,9 +12,10 @@ class ResponseStatus(Enum):
     TARGET_NOT_AVAILABLE = 2
     STORE_NOT_OPEN = 3
 
-def check_status():
+def check_status(target=None):
     url = 'https://reserve.cdn-apple.com/CN/zh_CN/reserve/iPhone/availability.json'
-    target = 'MNFP2CH/A'
+    if not target:
+        target = 'MNFP2CH/A'
 
     req = urllib2.Request(url)
     f = urllib2.urlopen(req)
@@ -49,13 +50,13 @@ def check_status():
 
         available_stores = []
         urls = []
-        order_url = 'https://reserve.cdn-apple.com/CN/zh_CN/reserve/iPhone/availability?channel=&returnURL=&store={store_num}&partNumber=MNFP2CH%2FA'
+        order_url = 'https://reserve.cdn-apple.com/CN/zh_CN/reserve/iPhone/availability?channel=&returnURL=&store={store_num}&partNumber={target}'
 
 
         for k, v in beijing_availability.items():
             if 'ALL' == v:
                 available_stores.append(beijing_stores.get(k))
-                urls.append(order_url.format(store_num=k))
+                urls.append(order_url.format(store_num=k, target=target.replace('/','%2F')))
 
         if len(available_stores) > 0:
             return dict(status=ResponseStatus.TARGET_AVAILABLE,
@@ -79,8 +80,9 @@ while flag:
         print '* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *'
         print '    {target_name} is available in the following Apple Stores:'.format(target_name=target_name)
         print '             {stores}'.format(stores=stores)
-        print '         Directing to the apple.com.cn...'
-        print '                 Thanks for using!'
+        print '* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *'
+        print '                Directing to the apple.com.cn...'
+        print '                      Thanks for using!'
         print '* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *'
         for url in urls:
             webbrowser.open(url)
