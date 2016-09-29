@@ -17,7 +17,7 @@ Don't worry, more powerful functions will be implemented before long.
 
 ## Updates
 - 2016.09.29
-    Fix crash bug
+    + Fix crash bug
 - 2016.09.28
     + Show update time when Apple Store is not available
 - 2016.09.27
