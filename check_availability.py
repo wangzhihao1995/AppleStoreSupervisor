@@ -49,7 +49,7 @@ def check_status():
         xd = beijing_availability.get('xidan').get(target)
 
         print '------------------------------------'
-        print ' BEIJING IPHONE7+ BLACK AVALABILITY'
+        print ' BEIJING IPHONE7+ BLACK AVAILABILITY'
         print '  Last Updated Time: {now_time}'.format(now_time=now_time)
         print '------------------------------------'
         print '   SANLITUN:     {status}'.format(status=slt)
@@ -89,20 +89,21 @@ while flag:
     try:
         response = check_status()
     except:
+        print 'Exception'
         pass
     if response.get('status')==ResponseStatus.TARGET_AVAILABLE:
-        available_stores = response.get('available_stores')
+        available_stores = response.get('stores')
         urls = response.get('urls')
         flag = 0
         stores = ', '.join(available_stores)
         print '* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *'
-        print '    iPhone 7 Plus is available in {stores} now!'.format(stores=stores)
+        # print '    iPhone 7 Plus is available in {stores} now!'.format(stores=stores)
         print '         Directing to the apple.com.cn...'
         print '             Thanks for using!'
         print '* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *'
         for url in urls:
             webbrowser.open(url)
         flag = False
-    sleep_time = random.randint(2, 6)
+    sleep_time = random.randint(1, 3)
     time.sleep(sleep_time)
 
